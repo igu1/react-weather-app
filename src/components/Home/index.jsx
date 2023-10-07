@@ -15,7 +15,6 @@ function Home() {
       place = 'Nowhere';
     }
     const response = await api.getWeather(place);
-    console.log(response);
     if (response.cod === '404'|| response.cod === '400') {
       await Swal.fire({
         icon: "error",
@@ -64,15 +63,21 @@ function Home() {
         }
       }
     )
-    const responcse =await getData(place)
-    setData(responcse);
+    const response =await getData(place)
+    setData(response);
+    localStorage.setItem("data", JSON.stringify(response));
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      await handlePlaceCall();
-    };
-    fetchData();
+    const localdata =localStorage.getItem("data")
+    if (localdata){
+      setData(JSON.parse(localdata));
+    }else{
+      const fetchData = async () => {
+        await handlePlaceCall();
+      };
+      fetchData();
+    }
   }, []);
 
   return (
